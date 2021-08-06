@@ -1,0 +1,100 @@
+version: "3"
+services:
+    # nginx:
+    #     build:
+    #         context: ./nginx
+    #         dockerfile: Dockerfile
+    #         # args:
+    #     networks:
+    #         - devnet
+    #     image: ilocalnginx:ppxio
+    #     container_name: ppxio_nginx
+    #     # entrypoint:
+    #     # env_file:
+    #     volumes:
+    #         - ./nginx/assets:/server/assets
+    #         - ./nginx/log:/server/log
+    #         # - "nginxassets:/server/assets"
+    #         # - "nginxlog:/server/log"
+    #     ports:
+    #         - "443:443"
+    #         - "80:80"
+    mysql:
+        container_name: dev_mysql
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: "123456"
+            # MYSQL_DATABASE: "ppxio"
+            MYSQL_USER: "nacos"
+            MYSQL_PASSWORD: "123456"
+        ports:
+            - "3306:3306"
+            - "33060:33060"
+        volumes:
+            - ./mysql/init:/docker-entrypoint-initdb.d
+            - ./mysql/opt-sql:/opt/sql
+            - ./mysql/conf.d:/etc/mysql/conf.d
+            # - ./mysql/lib:/var/lib/mysql
+            - ./mysql/logs:/var/log/mysql
+            # - ./mysql/data:/var/lib/mysql_data
+            # - "mysqlvar_log:/var/log/mysql"
+            # - "mysqlvar_run:/var/run"
+            # - "mysqlvar_data:/data"
+        networks:
+            - devnet
+        restart: always
+
+    # nacos:
+    #     container_name: dev_nacos
+    #     image: nacos/nacos-server:2.0.2
+    #     ports:
+    #         - "8848:8848"
+    #         - "9848:9848"
+    #         - "9555:9555"
+    #     environment:
+    #         MODE: "standalone"
+    #     depends_on:
+    #         - mysql
+    #     volumes:
+    #         - ./nacos/logs:/home/nacos/logs
+    #         # - ./init.d/custom.properties:/home/nacos/init.d/custom.properties
+    #     restart: always
+    #     env_file: ./nacos/standalone/mysql.env
+    #     networks:
+    #         - devnet
+    # redis:
+    #     # image: redis
+    #     build:
+    #         context: ./redis
+    #         dockerfile: Dockerfile
+    #         # args:
+    #     image: redis:ppxio
+    #     container_name: ppxio_redis
+    #     volumes:
+    #         # - ./redis/conf/redis.conf:/etc/redis/redis.conf
+    #         - ./redis/data:/data
+    #     networks:
+    #         - devnet
+    #     restart: always
+    #     ports:
+    #         - "6379:6379"
+    #     environment:
+    #         appendonly: "yes"
+
+    # rabbitmq:
+    #     build:
+    #         context: ./rabbitmq
+    #         dockerfile: Dockerfile
+    #     image: rabbitmq:ppxio
+    #     container_name: ppxio_rabbitmq
+    #     # volumes:
+    #         # - ./rabbitmq/data:/var/lib/rabbitmq
+    #     networks:
+    #         - devnet
+    #     restart: always
+    #     ports:
+    #         - "15672:15672"
+    #         - "5672:5672"
+
+networks:
+    devnet:
