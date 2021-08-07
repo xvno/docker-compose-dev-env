@@ -24,8 +24,9 @@ services:
     # mysql:
     #     container_name: dev_mysql
     #     image: mysql:5.7
+    #     env_file: ./mysql/default.env
     #     environment:
-    #         MYSQL_ROOT_PASSWORD: "123456"
+    #         MYSQL_ROOT_PASSWORD: "Passw01d"
     #         # MYSQL_DATABASE: "ppxio"
     #         MYSQL_USER: "nacos"
     #         MYSQL_PASSWORD: "123456"
