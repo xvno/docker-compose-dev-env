@@ -1,9 +1,8 @@
-image=mysql:5.7
-name=dev_mysql
 dir=`cd $(dirname $0) && pwd`
+source $dir/def.sh
 
-docker stop $name
-docker rm $name
+docker stop $name 2> /dev/null
+docker rm $name 2> /dev/null
 # docker rmi $image
 
 docker run --name $name \
