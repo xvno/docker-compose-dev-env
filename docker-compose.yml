@@ -1,70 +1,72 @@
 version: "3.8"
 services:
-    nginx:
-        build:
-            context: ./nginx
-            dockerfile: Dockerfile
-            # args:
+    # nginx:
+    #     build:
+    #         context: ./nginx
+    #         dockerfile: Dockerfile
+    #         # args:
+    #     networks:
+    #         - dev_net
+    #     image: docker_nginx:dev
+    #     container_name: dev_nginx
+    #     # entrypoint:
+    #     # env_file:
+    #     volumes:
+    #         - ./nginx/assets:/server/assets
+    #         - ./nginx/log:/server/log
+    #         # - "nginxassets:/server/assets"
+    #         # - "nginxlog:/server/log"
+    #     ports:
+    #         - "80:80"
+    #         - "8000:8000"
+    #         - "443:443"
+    #         - "1443:1443"
+    mysql:
+        container_name: dev_mysql
+        image: mysql:5.7
+        env_file: ./mysql/default.env
+        # environment:
+            # MYSQL_ROOT_PASSWORD: "Passw01d"
+            # MYSQL_DATABASE: "ppxio"
+            # MYSQL_USER: "nacos"
+            # MYSQL_PASSWORD: "123456"
+        ports:
+            - "3306:3306"
+            - "33060:33060"
+        volumes:
+            - ./mysql/init:/docker-entrypoint-initdb.d
+            - ./mysql/opt-sql:/opt/sql
+            - ./mysql/conf.d:/etc/mysql/conf.d
+            # - ./mysql/lib:/var/lib/mysql
+            - ./mysql/logs:/var/log/mysql
+            # - ./mysql/data:/var/lib/mysql_data
+            # - "mysqlvar_log:/var/log/mysql"
+            # - "mysqlvar_run:/var/run"
+            # - "mysqlvar_data:/data"
         networks:
             - dev_net
-        image: docker_nginx:dev
-        container_name: dev_nginx
-        # entrypoint:
-        # env_file:
-        volumes:
-            - ./nginx/assets:/server/assets
-            - ./nginx/log:/server/log
-            # - "nginxassets:/server/assets"
-            # - "nginxlog:/server/log"
-        ports:
-            - "80:80"
-            - "8000:8000"
-            - "443:443"
-            - "1443:1443"
-    # mysql:
-    #     container_name: dev_mysql
-    #     image: mysql:5.7
-    #     env_file: ./mysql/default.env
-    #     environment:
-    #         MYSQL_ROOT_PASSWORD: "Passw01d"
-    #         # MYSQL_DATABASE: "ppxio"
-    #         MYSQL_USER: "nacos"
-    #         MYSQL_PASSWORD: "123456"
-    #     ports:
-    #         - "3306:3306"
-    #         - "33060:33060"
-    #     volumes:
-    #         - ./mysql/init:/docker-entrypoint-initdb.d
-    #         - ./mysql/opt-sql:/opt/sql
-    #         - ./mysql/conf.d:/etc/mysql/conf.d
-    #         # - ./mysql/lib:/var/lib/mysql
-    #         - ./mysql/logs:/var/log/mysql
-    #         # - ./mysql/data:/var/lib/mysql_data
-    #         # - "mysqlvar_log:/var/log/mysql"
-    #         # - "mysqlvar_run:/var/run"
-    #         # - "mysqlvar_data:/data"
-    #     networks:
-    #         - dev_net
-    #     restart: always
+        restart: always
 
-    # nacos:
-    #     container_name: dev_nacos
-    #     image: nacos/nacos-server:2.0.2
-    #     ports:
-    #         - "8848:8848"
-    #         - "9848:9848"
-    #         - "9555:9555"
-    #     environment:
-    #         MODE: "standalone"
-    #     depends_on:
-    #         - mysql
-    #     volumes:
-    #         - ./nacos/logs:/home/nacos/logs
-    #         # - ./init.d/custom.properties:/home/nacos/init.d/custom.properties
-    #     restart: always
-    #     env_file: ./nacos/standalone-mysql.env
-    #     networks:
-    #         - dev_net
+    nacos:
+        container_name: dev_nacos
+        image: nacos/nacos-server:2.0.2
+        env_file: ./nacos/standalone-mysql.env
+        ports:
+            - "8848:8848"
+            - "9848:9848"
+            - "9555:9555"
+        # environment:
+        #     MODE: "standalone"
+        depends_on:
+            - mysql
+        volumes:
+            - ./nacos/logs:/home/nacos/logs
+            # - ./init.d/custom.properties:/home/nacos/init.d/custom.properties
+        restart: always
+        links:
+            - mysql
+        networks:
+            - dev_net
     # redis:
     #     # image: redis
     #     build:

@@ -14,4 +14,4 @@ CREATE DATABASE  `dev-nacos` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_gener
 use `dev-nacos`;
 grant all PRIVILEGES on `dev-nacos`.* to 'nacos'@'%' identified by '123456';
 flush privileges;
--- source /opt/sql/dev-nacos.sql;
+source /opt/sql/dev-nacos.sql;
